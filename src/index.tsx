@@ -1,17 +1,32 @@
-import React from 'react';
-import { useGeolocation } from 'react-use';
+import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
-import locationApi from './api/locationApi';
+import conditionsApi, { ConditionsResponse } from './api/conditionsApi';
+import { trackPromise } from 'react-promise-tracker';
 
 export const Demo = () => {
-    const state = useGeolocation();
-    const latitude = state.latitude?.toString() || '';
-    const longitude = state.longitude?.toString() || '';
+    const [data, setData] = useState<ConditionsResponse>();
+    const latitude = '53.4304656';
+    const longitude = '59.0031243';
     const getPosition = async () => {
-        return await locationApi.getLocationRequest(latitude, longitude);
+        try {
+            const response: ConditionsResponse =
+                (await conditionsApi.getConditionRequest(latitude, longitude)) || void 0;
+            if (response?.success) {
+                console.log(response);
+                setData(response);
+            }
+        } catch (e) {
+            console.log(e);
+        }
     };
-    const position = getPosition();
-    console.log(state, position);
+    useEffect(() => {
+        void trackPromise(getPosition());
+    }, []);
 
-    return <Text>test</Text>;
+    return (
+        <Text>
+            Weather in {data?.response[0].place.name} is {data?.response[0].periods[0].tempC} C. Feels like{' '}
+            {data?.response[0].periods[0].feelslikeC}
+        </Text>
+    );
 };

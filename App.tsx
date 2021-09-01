@@ -1,13 +1,17 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyledView, StyledText } from './App.styled';
-import { Demo } from './src';
+import { RecoilRoot } from 'recoil';
+import { WeatherPage } from './src/Pages/WeatherPage';
+import { Spinner } from './src/components/Spinner';
+import { View } from 'react-native';
 
 export default function App() {
     return (
-        <StyledView>
-            <Demo />
+        <RecoilRoot>
+            <React.Suspense fallback={<Spinner />}>
+                <WeatherPage />
+            </React.Suspense>
             <StatusBar style='auto' />
-        </StyledView>
+        </RecoilRoot>
     );
 }

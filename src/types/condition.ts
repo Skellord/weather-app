@@ -1,3 +1,9 @@
+export type CloudsCoded = 'CL' | 'FW' | 'SC' | 'BK' | 'OV';
+
+// export enum Clouds {
+//     'Clear' = ''
+// }
+
 export interface IResponse {
     loc: {
         lat: number;
@@ -36,7 +42,7 @@ export interface IResponse {
             visibilityKM: number | null;
             visibilityMI: number | null;
             sky: number | null;
-            cloudsCoded: string | null;
+            cloudsCoded: CloudsCoded | null;
             weather: string | null;
             weatherCoded: string | null;
             weatherPrimary: string | null;

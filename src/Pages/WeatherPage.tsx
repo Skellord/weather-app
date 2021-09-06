@@ -1,7 +1,5 @@
-import React from 'react';
-import { Text, Image } from 'react-native';
-import { useRecoilValue } from 'recoil';
-import { weatherState } from '../store/weatherStore';
+import React, { useEffect } from 'react';
+import weatherStore from '../store/weatherStore';
 import {
     StyledCity,
     StyledWeatherPage,
@@ -10,16 +8,26 @@ import {
     StyledTempText,
     StyledFeelsText,
 } from './WeatherPage.styled';
+import { trackPromise } from 'react-promise-tracker';
+import { toJS } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import geoPositionStore from '../store/geoPositionStore';
 
-export const WeatherPage = () => {
-    const weatherResponse = useRecoilValue(weatherState);
-    console.log(weatherResponse);
-    const place = weatherResponse.place.name;
-    const currentDay = weatherResponse.periods[0];
-    const currentTemp = Math.floor(currentDay.tempC);
-    const feelslLikeTemp = Math.floor(currentDay.feelslikeC);
+const WeatherPage = () => {
+    const latitude = '53.4304656';
+    const longitude = '59.0031243';
+    useEffect(() => {
+        geoPositionStore.setCoordinates(latitude, longitude);
+        void trackPromise(geoPositionStore.getCurrentLocation());
+        void trackPromise(weatherStore.getWeatherCondition(latitude, longitude));
+    }, []);
+    const place = weatherStore.place;
+    const currentTemp = weatherStore.currTemp;
+    const feelsLikeTemp = weatherStore.feelsLike;
+    const cloudsCoded = weatherStore.cloudsCoded;
+    console.log(toJS(geoPositionStore));
     let img;
-    switch (currentDay.cloudsCoded) {
+    switch (cloudsCoded) {
         case 'CL':
         case 'FW':
             img = require('../../assets/img/good.png');
@@ -30,12 +38,18 @@ export const WeatherPage = () => {
 
     return (
         <StyledWeatherPage>
-            <StyledCity>{place}</StyledCity>
-            <StyledTempText>
-                На улице <StyledTemp>{currentTemp}°С</StyledTemp>
-            </StyledTempText>
-            <StyledFeelsText>Ощущается как {feelslLikeTemp}°С</StyledFeelsText>
-            <StyledStatusImage source={img} />
+            {weatherStore.isLoaded && (
+                <>
+                    <StyledCity>{place}</StyledCity>
+                    <StyledTempText>
+                        На улице <StyledTemp>{currentTemp}°С</StyledTemp>
+                    </StyledTempText>
+                    <StyledFeelsText>Ощущается как {feelsLikeTemp}°С</StyledFeelsText>
+                    <StyledStatusImage source={img} />
+                </>
+            )}
         </StyledWeatherPage>
     );
 };
+
+export default observer(WeatherPage);

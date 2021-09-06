@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyledLayout } from './Layout.styled';
-import { WeatherPage } from './Pages/WeatherPage';
+import WeatherPage from './Pages/WeatherPage';
 import { Spinner } from './components/Spinner';
+import { observer } from 'mobx-react-lite';
 
-export const Layout = () => {
+const Layout = () => {
     return (
         <StyledLayout>
             <React.Suspense fallback={<Spinner />}>
@@ -12,3 +13,5 @@ export const Layout = () => {
         </StyledLayout>
     );
 };
+
+export default observer(Layout);

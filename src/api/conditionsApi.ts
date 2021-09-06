@@ -2,7 +2,7 @@ import Api from './api';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { apiConfig, API_CONDITIONS } from './apiConfig';
 import { clientId, clientSecret } from './apiKey';
-import { ConditionsResponse } from '../types/condition';
+import { ConditionsResponse } from '../types/condition.types';
 
 class ConditionsApi extends Api {
     public constructor(config: AxiosRequestConfig) {

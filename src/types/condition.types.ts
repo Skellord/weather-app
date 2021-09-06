@@ -4,7 +4,7 @@ export type CloudsCoded = 'CL' | 'FW' | 'SC' | 'BK' | 'OV';
 //     'Clear' = ''
 // }
 
-export interface IResponse {
+export interface ConditionResponse {
     loc: {
         lat: number;
         long: number;
@@ -66,10 +66,6 @@ export interface IResponse {
 export interface ConditionsResponse {
     success: boolean;
     error: undefined | null | number;
-    response: IResponse[];
+    response: ConditionResponse[];
 }
 
-export interface GeoPosition {
-    latitude: string;
-    longitude: string;
-}

@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
 export const API_CONDITIONS = 'conditions/';
+export const API_LOCATIONS = 'locations/v1/cities/geoposition/search';
 
 export const apiLanguage = 'ru-ru';
 

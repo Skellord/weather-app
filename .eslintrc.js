@@ -18,7 +18,7 @@ module.exports = {
         '@typescript-eslint/no-use-before-define': ['off'],
         'comma-dangle': ['error', 'only-multiline'],
         'react-hooks/rules-of-hooks': 'error',
-        'react-hooks/exhaustive-deps': 'error',
+        'react-hooks/exhaustive-deps': 'off',
         'react/prop-types': 'off',
         'react/no-find-dom-node': 'off',
         '@typescript-eslint/no-unused-vars': 'off',

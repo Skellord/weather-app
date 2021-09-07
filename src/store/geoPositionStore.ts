@@ -5,7 +5,8 @@ import locationsApi from '../api/locationsApi';
 class geoPositionStore {
     latitude!: string;
     longitude!: string;
-    place: string | undefined;
+    place!: string;
+    isLoaded = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -20,10 +21,17 @@ class geoPositionStore {
         this.place = place;
     }
 
-    async getCurrentLocation(): Promise<GeoLocationResponse> {
+    setIsLoaded(isLoaded: boolean) {
+        this.isLoaded = isLoaded;
+    }
+
+    async getCurrentLocation(latitude: string, longitude: string): Promise<GeoLocationResponse> {
         try {
-            const response = (await locationsApi.getLocationRequest(this.latitude, this.longitude)) || void 0;
-            this.setPlace(response.LocalizedName);
+            const response = await locationsApi.getLocationRequest(latitude, longitude);
+            if (response) {
+                this.setPlace(response.LocalizedName);
+                this.setIsLoaded(true);
+            }
             return response;
         } catch (e) {
             throw e;

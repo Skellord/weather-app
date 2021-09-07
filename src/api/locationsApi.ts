@@ -4,7 +4,7 @@ import { apiConfig, API_LOCATIONS, apiLanguage } from './apiConfig';
 import { apiKey } from './apiKey';
 import { GeoLocationResponse } from '../types/geoPosition.types';
 
-const locationsApiConfig = {
+const locationsApiConfig: AxiosRequestConfig = {
     baseURL: 'http://dataservice.accuweather.com/',
 };
 

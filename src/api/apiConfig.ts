@@ -7,7 +7,6 @@ export const apiLanguage = 'ru-ru';
 
 const headers = {
     common: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Content-Type': 'application/json',
         Accept: 'application/json',
     },

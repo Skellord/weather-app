@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import weatherStore from '../store/weatherStore';
 import {
     StyledCity,
@@ -8,7 +8,7 @@ import {
     StyledTempText,
     StyledFeelsText,
 } from './WeatherPage.styled';
-import { trackPromise } from 'react-promise-tracker';
+import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import geoPositionStore from '../store/geoPositionStore';
@@ -17,11 +17,10 @@ const WeatherPage = () => {
     const latitude = '53.4304656';
     const longitude = '59.0031243';
     useEffect(() => {
-        geoPositionStore.setCoordinates(latitude, longitude);
-        void trackPromise(geoPositionStore.getCurrentLocation());
+        void trackPromise(geoPositionStore.getCurrentLocation(latitude, longitude));
         void trackPromise(weatherStore.getWeatherCondition(latitude, longitude));
     }, []);
-    const place = weatherStore.place;
+    const place = geoPositionStore.place;
     const currentTemp = weatherStore.currTemp;
     const feelsLikeTemp = weatherStore.feelsLike;
     const cloudsCoded = weatherStore.cloudsCoded;
@@ -38,7 +37,7 @@ const WeatherPage = () => {
 
     return (
         <StyledWeatherPage>
-            {weatherStore.isLoaded && (
+            {weatherStore.isLoaded && geoPositionStore.isLoaded && (
                 <>
                     <StyledCity>{place}</StyledCity>
                     <StyledTempText>

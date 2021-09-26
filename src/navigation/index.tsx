@@ -4,12 +4,15 @@ import LinkingConfiguration from './LinkingConfiguration';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation.types';
 import { NavBar } from '../components/NavBar/NavBar';
+import { View } from 'react-native';
 
 const Navigation: FC = () => {
     return (
-        <NavigationContainer linking={LinkingConfiguration}>
-            <RootNavigator />
-        </NavigationContainer>
+        <View style={{ flex: 1 }}>
+            <NavigationContainer linking={LinkingConfiguration}>
+                <RootNavigator />
+            </NavigationContainer>
+        </View>
     );
 };
 

@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { GeoLocationResponse } from '../types/geoPosition.types';
+import { CitiesResponse, GeoLocationResponse } from '../types/geoPosition.types';
 import locationsApi from '../api/locationsApi';
 
 class geoPositionStore {
@@ -33,8 +33,16 @@ class geoPositionStore {
                 this.setIsLoaded(true);
             }
             return response;
-        } catch (e) {
-            throw e;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async fetchCityQuery(query: string): Promise<CitiesResponse> {
+        try {
+            return await locationsApi.fetchCitiesQueries(query);
+        } catch (error) {
+            throw error;
         }
     }
 }

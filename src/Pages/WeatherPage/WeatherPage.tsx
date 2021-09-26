@@ -12,6 +12,7 @@ import { trackPromise } from 'react-promise-tracker';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import geoPositionStore from '../../store/geoPositionStore';
+import { Spinner } from '../../components/Spinner';
 
 const WeatherPage: FC = () => {
     const latitude = '53.4304656';
@@ -36,18 +37,20 @@ const WeatherPage: FC = () => {
     }
 
     return (
-        <StyledWeatherPage>
-            {weatherStore.isLoaded && geoPositionStore.isLoaded && (
-                <>
-                    <StyledCity>{place}</StyledCity>
-                    <StyledTempText>
-                        На улице <StyledTemp>{currentTemp}°С</StyledTemp>
-                    </StyledTempText>
-                    <StyledFeelsText>Ощущается как {feelsLikeTemp}°С</StyledFeelsText>
-                    <StyledStatusImage source={img} />
-                </>
-            )}
-        </StyledWeatherPage>
+        <React.Suspense fallback={<Spinner />}>
+            <StyledWeatherPage>
+                {weatherStore.isLoaded && geoPositionStore.isLoaded && (
+                    <>
+                        <StyledCity>{place}</StyledCity>
+                        <StyledTempText>
+                            На улице <StyledTemp>{currentTemp}°С</StyledTemp>
+                        </StyledTempText>
+                        <StyledFeelsText>Ощущается как {feelsLikeTemp}°С</StyledFeelsText>
+                        <StyledStatusImage source={img} />
+                    </>
+                )}
+            </StyledWeatherPage>
+        </React.Suspense>
     );
 };
 

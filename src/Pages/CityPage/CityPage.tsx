@@ -1,50 +1,54 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { StyledAutocompleteContainer } from './CityPage.styled';
-import Autocomplete from 'react-native-autocomplete-input';
+import React, { FC, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { CitiesResponse, GeoLocationCityResponse } from '../../types/geoPosition.types';
 import { observer } from 'mobx-react-lite';
 import geoPositionStore from '../../store/geoPositionStore';
+import { StyledList, StyledListItem, StyledInput, StyledAutocompleteContainer } from './CityPage.styled';
+import Autocomplete from 'react-native-autocomplete-input';
 
 const CityPage: FC = () => {
-    const [query, setQuery] = useState<string>('');
-    const [allCities, setAllCities] = useState<CitiesResponse | null>(null);
-    const isLoading = !allCities?.length;
-    const data: string[] = (allCities?.length === 1 && allCities.map(item => item.LocalizedName)) || [];
-    const placeholder = isLoading ? 'Загрузка данных' : 'Введите название города';
-    useEffect(() => {
-        let cities: any;
-        const fetchQuery = async () => {
-            cities = await geoPositionStore.fetchCityQuery(query);
-            return;
-        };
-        if (query?.length > 0) {
-            fetchQuery().then(() => setAllCities(cities));
-        }
-    }, [query]);
-    console.log(allCities, 'allcities', data);
+    const [value, setValue] = useState<string>('');
+    const [allCities, setAllCities] = useState<CitiesResponse>([]);
+    const [hideResults, setHideResults] = useState<boolean>(false);
+
+    const onChangeText = async (query: string) => {
+        setValue(query);
+        hideResults ? setHideResults(false) : void 0;
+        const cities = await geoPositionStore.fetchCityQuery(query);
+        setAllCities(cities);
+    };
     return (
-        <View>
+        <View style={{ position: 'relative' }}>
             <StyledAutocompleteContainer>
                 <Autocomplete
-                    data={data}
-                    editable={isLoading}
-                    autoCorrect={false}
-                    value={query}
-                    onChangeText={setQuery}
-                    placeholder={placeholder}
+                    blurOnSubmit={true}
+                    hideResults={hideResults}
+                    data={allCities}
+                    value={value}
+                    onChangeText={onChangeText}
+                    onFocus={() => setHideResults(false)}
+                    onBlur={() => setHideResults(true)}
                     flatListProps={{
                         keyboardShouldPersistTaps: 'always',
-                        keyExtractor: (city: GeoLocationCityResponse) => city.Key,
-                        renderItem: ({ item }) => (
-                            <TouchableOpacity onPress={() => setQuery(item.LocalizedName)}>
-                                <Text>{item.LocalizedName}</Text>
-                            </TouchableOpacity>
-                        ),
+                        renderItem: ({ item }) => {
+                            console.log(item);
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => [
+                                        setValue(item.AdministrativeArea.LocalizedName),
+                                        setHideResults(true),
+                                    ]}
+                                >
+                                    <StyledListItem>
+                                        {item.LocalizedName} {item.AdministrativeArea.LocalizedName}{' '}
+                                        {item.AdministrativeArea.LocalizedType}
+                                    </StyledListItem>
+                                </TouchableOpacity>
+                            );
+                        },
                     }}
                 />
             </StyledAutocompleteContainer>
-            <Text>City</Text>
         </View>
     );
 };

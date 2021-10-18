@@ -13,19 +13,21 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import geoPositionStore from '../../store/geoPositionStore';
 import { Spinner } from '../../components/Spinner';
+import { Text } from 'react-native';
 
 const WeatherPage: FC = () => {
-    const latitude = '53.4304656';
-    const longitude = '59.0031243';
+    const latitude = geoPositionStore.latitude || '53.4304656';
+    const longitude = geoPositionStore.longitude || '59.0031243';
+    const keyCode = geoPositionStore.keyCode;
     useEffect(() => {
         void trackPromise(geoPositionStore.getCurrentLocation(latitude, longitude));
-        void trackPromise(weatherStore.getWeatherCondition(latitude, longitude));
+        void trackPromise(weatherStore.getWeatherCondition(keyCode));
     }, []);
     const place = geoPositionStore.place;
     const currentTemp = weatherStore.currTemp;
     const feelsLikeTemp = weatherStore.feelsLike;
     const cloudsCoded = weatherStore.cloudsCoded;
-    console.log(toJS(geoPositionStore));
+    console.log(toJS(geoPositionStore), toJS(weatherStore));
     let img;
     switch (cloudsCoded) {
         case 'CL':
@@ -42,6 +44,7 @@ const WeatherPage: FC = () => {
                 {weatherStore.isLoaded && geoPositionStore.isLoaded && (
                     <>
                         <StyledCity>{place}</StyledCity>
+                        <Text>{cloudsCoded}</Text>
                         <StyledTempText>
                             На улице <StyledTemp>{currentTemp}°С</StyledTemp>
                         </StyledTempText>

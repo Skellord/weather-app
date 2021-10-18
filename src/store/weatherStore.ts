@@ -9,8 +9,7 @@ class weatherStore {
     isLoaded = false;
     currTemp: number | undefined;
     feelsLike: number | undefined;
-    cloudsCoded: CloudsCoded | undefined;
-    place: string | undefined;
+    cloudsCoded: string | undefined;
 
     constructor() {
         makeAutoObservable(this);
@@ -24,7 +23,7 @@ class weatherStore {
         this.feelsLike = Math.floor(tempFeelsLike);
     }
 
-    setCloudsCoded(code: CloudsCoded | null) {
+    setCloudsCoded(code: string | null) {
         if (!isNull(code)) {
             this.cloudsCoded = code;
         }
@@ -34,21 +33,17 @@ class weatherStore {
         this.isLoaded = isLoaded;
     }
 
-    setPlace(place: string) {
-        this.place = place;
-    }
-
-    async getWeatherCondition(latitude: string, longitude: string): Promise<ConditionResponse> {
+    async getWeatherCondition(keyCode: string): Promise<ConditionResponse> {
         try {
-            const response = (await conditionsApi.getConditionRequest(latitude, longitude)) || void 0;
-            if (response?.success) {
-                const currDay = response.response[0].periods[0];
-                this.setCurrTemp(currDay.tempC);
-                this.setFeelsLike(currDay.feelslikeC);
-                this.setCloudsCoded(currDay.cloudsCoded);
+            const response = (await conditionsApi.getConditionRequest(keyCode)) || void 0;
+            if (response?.length > 0) {
+                const currDay = response[0];
+                this.setCurrTemp(currDay.Temperature.Metric.Value);
+                this.setFeelsLike(currDay.RealFeelTemperature.Metric.Value);
+                this.setCloudsCoded(currDay.WeatherText);
                 this.setIsLoaded(true);
             }
-            return response.response[0];
+            return response;
         } catch (e) {
             throw e;
         }

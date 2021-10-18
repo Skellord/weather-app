@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
-import { StyledNavBar, StyledLink } from './NavBar.styled';
-import { Text } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { StyledNavBar } from './NavBar.styled';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { RootTabParamList, RootTabScreenProps } from '../../types/navigation.types';
+import { RootTabParamList } from '../../types/navigation.types';
 import CityPage from '../../Pages/CityPage/CityPage';
 import WeatherPage from '../../Pages/WeatherPage/WeatherPage';
 

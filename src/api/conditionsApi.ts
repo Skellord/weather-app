@@ -1,20 +1,24 @@
 import Api from './api';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { apiConfig, API_CONDITIONS } from './apiConfig';
-import { clientId, clientSecret } from './apiKey';
-import { ConditionsResponse } from '../types/condition.types';
+import { apiConfig, API_CONDITIONS, apiLanguage } from './apiConfig';
+import { apiKey, clientId, clientSecret } from './apiKey';
+import { ConditionResponse } from '../types/condition.types';
+
+const locationsApiConfig: AxiosRequestConfig = {
+    baseURL: 'http://dataservice.accuweather.com/',
+};
 
 class ConditionsApi extends Api {
     public constructor(config: AxiosRequestConfig) {
         super(config);
     }
 
-    public getConditionRequest(latitude: string, longitude: string) {
-        return this.get<ConditionsResponse>(
-            `${API_CONDITIONS}${latitude},${longitude}?format=json&client_id=${clientId}&client_secret=${clientSecret}`,
-            apiConfig
+    public getConditionRequest(keyCode: string) {
+        return this.get<ConditionResponse>(
+            `${API_CONDITIONS}${keyCode}?apikey=${apiKey}&language=${apiLanguage}&details=true`,
+            locationsApiConfig
         )
-            .then((response: AxiosResponse<ConditionsResponse>) => {
+            .then((response: AxiosResponse<ConditionResponse>) => {
                 const { data } = response;
                 return data;
             })

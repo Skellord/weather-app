@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-export const API_CONDITIONS = 'conditions/';
+export const API_CONDITIONS = 'currentconditions/v1/';
 export const API_LOCATIONS = 'locations/v1/cities/geoposition/search';
 export const API_LOCATIONS_TEXT = 'locations/v1/search';
 

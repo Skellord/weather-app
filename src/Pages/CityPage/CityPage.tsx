@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { CitiesResponse, GeoLocationCityResponse } from '../../types/geoPosition.types';
 import { observer } from 'mobx-react-lite';
 import geoPositionStore from '../../store/geoPositionStore';
-import { StyledList, StyledListItem, StyledInput, StyledAutocompleteContainer } from './CityPage.styled';
+import { StyledListItem, StyledAutocompleteContainer } from './CityPage.styled';
 import Autocomplete from 'react-native-autocomplete-input';
 
 const CityPage: FC = () => {
@@ -17,6 +17,14 @@ const CityPage: FC = () => {
         const cities = await geoPositionStore.fetchCityQuery(query);
         setAllCities(cities);
     };
+
+    const onPressHandler = (item: GeoLocationCityResponse) => {
+        setValue(item.LocalizedName);
+        geoPositionStore.setCoordinates(item.GeoPosition.Latitude.toString(), item.GeoPosition.Longitude.toString());
+        geoPositionStore.setKeyCode(item.Key);
+        setHideResults(true);
+    };
+    console.log(geoPositionStore.keyCode);
     return (
         <View style={{ position: 'relative' }}>
             <StyledAutocompleteContainer>
@@ -27,18 +35,11 @@ const CityPage: FC = () => {
                     value={value}
                     onChangeText={onChangeText}
                     onFocus={() => setHideResults(false)}
-                    onBlur={() => setHideResults(true)}
                     flatListProps={{
                         keyboardShouldPersistTaps: 'always',
                         renderItem: ({ item }) => {
-                            console.log(item);
                             return (
-                                <TouchableOpacity
-                                    onPress={() => [
-                                        setValue(item.AdministrativeArea.LocalizedName),
-                                        setHideResults(true),
-                                    ]}
-                                >
+                                <TouchableOpacity key={item.EnglishName} onPress={() => onPressHandler(item)}>
                                     <StyledListItem>
                                         {item.LocalizedName} {item.AdministrativeArea.LocalizedName}{' '}
                                         {item.AdministrativeArea.LocalizedType}

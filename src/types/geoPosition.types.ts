@@ -9,7 +9,7 @@ export interface GeoLocationCityResponse extends GeoLocationResponse {
         Latitude: number;
         Longitude: number;
     };
-    AdministrativeArea: GeoLocationResponse | { LocalizedType: string };
+    AdministrativeArea: { LocalizedType: string; LocalizedName: string; EnglishName: string };
 }
 
 export type CitiesResponse = GeoLocationCityResponse[];

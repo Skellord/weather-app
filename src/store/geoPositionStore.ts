@@ -7,6 +7,7 @@ class geoPositionStore {
     longitude!: string;
     place!: string;
     isLoaded = false;
+    keyCode!: string;
 
     constructor() {
         makeAutoObservable(this);
@@ -23,6 +24,10 @@ class geoPositionStore {
 
     setIsLoaded(isLoaded: boolean) {
         this.isLoaded = isLoaded;
+    }
+
+    setKeyCode(key: string) {
+        this.keyCode = key;
     }
 
     async getCurrentLocation(latitude: string, longitude: string): Promise<GeoLocationResponse> {

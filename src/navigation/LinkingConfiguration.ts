@@ -14,11 +14,6 @@ const linking: LinkingOptions<RootStackParamList> = {
                             CityTabScreen: 'City',
                         },
                     },
-                    WeatherTab: {
-                        screens: {
-                            WeatherTabScreen: 'Weather',
-                        },
-                    },
                 },
             },
         },

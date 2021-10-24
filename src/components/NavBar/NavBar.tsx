@@ -18,13 +18,6 @@ export const NavBar: FC = () => {
                         title: 'Выбор города',
                     }}
                 />
-                <BottomTab.Screen
-                    name={'WeatherTab'}
-                    component={WeatherPage}
-                    options={{
-                        title: 'Сегодня',
-                    }}
-                />
             </BottomTab.Navigator>
         </StyledNavBar>
     );

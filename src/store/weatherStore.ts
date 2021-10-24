@@ -2,17 +2,25 @@ import { CloudsCoded, ConditionResponse } from '../types/condition.types';
 import conditionsApi from '../api/conditionsApi';
 import { makeAutoObservable } from 'mobx';
 import { isNull } from 'lodash';
-import { GeoLocationResponse } from '../types/geoPosition.types';
+import { CitiesResponse, GeoLocationResponse } from '../types/geoPosition.types';
 import locationsApi from '../api/locationsApi';
 
 class weatherStore {
-    isLoaded = false;
+    isLocationLoaded = false;
+    isWeatherLoaded = false;
     currTemp: number | undefined;
     feelsLike: number | undefined;
     cloudsCoded: string | undefined;
+    latitude!: string;
+    longitude!: string;
+    place!: string;
 
     constructor() {
         makeAutoObservable(this);
+    }
+
+    setPlace(place: string) {
+        this.place = place;
     }
 
     setCurrTemp(currTemp: number) {
@@ -29,8 +37,25 @@ class weatherStore {
         }
     }
 
-    setIsLoaded(isLoaded: boolean) {
-        this.isLoaded = isLoaded;
+    setLocationLoaded(isLoaded: boolean) {
+        this.isLocationLoaded = isLoaded;
+    }
+
+    setWeatherLoaded(isLoaded: boolean) {
+        this.isWeatherLoaded = isLoaded;
+    }
+
+    async getCurrentLocation(latitude: string, longitude: string): Promise<GeoLocationResponse> {
+        try {
+            const response = await locationsApi.getLocationRequest(latitude, longitude);
+            if (response) {
+                this.setLocationLoaded(true);
+                this.setPlace(response.LocalizedName);
+            }
+            return response;
+        } catch (error) {
+            throw error;
+        }
     }
 
     async getWeatherCondition(keyCode: string): Promise<ConditionResponse> {
@@ -41,11 +66,19 @@ class weatherStore {
                 this.setCurrTemp(currDay.Temperature.Metric.Value);
                 this.setFeelsLike(currDay.RealFeelTemperature.Metric.Value);
                 this.setCloudsCoded(currDay.WeatherText);
-                this.setIsLoaded(true);
+                this.setWeatherLoaded(true);
             }
             return response;
         } catch (e) {
             throw e;
+        }
+    }
+
+    async fetchCityQuery(query: string): Promise<CitiesResponse> {
+        try {
+            return await locationsApi.fetchCitiesQueries(query);
+        } catch (error) {
+            throw error;
         }
     }
 }

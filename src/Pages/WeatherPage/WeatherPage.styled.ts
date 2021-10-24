@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 export const StyledWeatherPage = styled.View`
     flex: 1;
     align-items: center;
+    padding-top: 40px;
 `;
 
 export const StyledCity = styled.Text`

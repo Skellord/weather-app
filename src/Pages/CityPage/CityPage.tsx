@@ -2,29 +2,44 @@ import React, { FC, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { CitiesResponse, GeoLocationCityResponse } from '../../types/geoPosition.types';
 import { observer } from 'mobx-react-lite';
-import geoPositionStore from '../../store/geoPositionStore';
 import { StyledListItem, StyledAutocompleteContainer } from './CityPage.styled';
 import Autocomplete from 'react-native-autocomplete-input';
+import WeatherPage from '../WeatherPage/WeatherPage';
+import { useAsyncDebounce } from 'react-table';
+import weatherStore from '../../store/weatherStore';
+
+interface GeoPosition {
+    latitude: string;
+    longitude: string;
+    keyCode: string;
+}
 
 const CityPage: FC = () => {
     const [value, setValue] = useState<string>('');
     const [allCities, setAllCities] = useState<CitiesResponse>([]);
     const [hideResults, setHideResults] = useState<boolean>(false);
+    const [geoPosition, setGeoPosition] = useState<GeoPosition>();
 
-    const onChangeText = async (query: string) => {
-        setValue(query);
+    const fetchQueries = useAsyncDebounce((query: string) => {
         hideResults ? setHideResults(false) : void 0;
-        const cities = await geoPositionStore.fetchCityQuery(query);
-        setAllCities(cities);
+        weatherStore.fetchCityQuery(query).then(data => setAllCities(data));
+    }, 200);
+
+    const onChangeText = (query: string) => {
+        setValue(query);
+        fetchQueries(query);
     };
 
     const onPressHandler = (item: GeoLocationCityResponse) => {
         setValue(item.LocalizedName);
-        geoPositionStore.setCoordinates(item.GeoPosition.Latitude.toString(), item.GeoPosition.Longitude.toString());
-        geoPositionStore.setKeyCode(item.Key);
+        setGeoPosition({
+            latitude: item.GeoPosition.Latitude.toString(),
+            longitude: item.GeoPosition.Longitude.toString(),
+            keyCode: item.Key,
+        });
         setHideResults(true);
     };
-    console.log(geoPositionStore.keyCode);
+    console.log(geoPosition);
     return (
         <View style={{ position: 'relative' }}>
             <StyledAutocompleteContainer>
@@ -50,6 +65,13 @@ const CityPage: FC = () => {
                     }}
                 />
             </StyledAutocompleteContainer>
+            {geoPosition && (
+                <WeatherPage
+                    latitude={geoPosition.latitude}
+                    longitude={geoPosition.longitude}
+                    keyCode={geoPosition.keyCode}
+                />
+            )}
         </View>
     );
 };

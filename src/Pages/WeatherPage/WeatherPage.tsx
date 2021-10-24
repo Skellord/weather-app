@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import weatherStore from '../../store/weatherStore';
 import {
     StyledCity,
@@ -11,23 +11,28 @@ import {
 import { trackPromise } from 'react-promise-tracker';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import geoPositionStore from '../../store/geoPositionStore';
 import { Spinner } from '../../components/Spinner';
 import { Text } from 'react-native';
 
-const WeatherPage: FC = () => {
-    const latitude = geoPositionStore.latitude || '53.4304656';
-    const longitude = geoPositionStore.longitude || '59.0031243';
-    const keyCode = geoPositionStore.keyCode;
+interface WeatherPage {
+    latitude: string;
+    longitude: string;
+    keyCode: string;
+}
+
+const WeatherPage: FC<WeatherPage> = ({ latitude, longitude, keyCode }) => {
+    const [place2, setFoo] = useState<string>();
     useEffect(() => {
-        void trackPromise(geoPositionStore.getCurrentLocation(latitude, longitude));
+        console.log('foo');
+        void trackPromise(weatherStore.getCurrentLocation(latitude, longitude));
         void trackPromise(weatherStore.getWeatherCondition(keyCode));
-    }, []);
-    const place = geoPositionStore.place;
+    }, [longitude, latitude, keyCode]);
+    weatherStore.getCurrentLocation(latitude, longitude).then(data => setFoo(data.LocalizedName));
     const currentTemp = weatherStore.currTemp;
+    const place = weatherStore.place;
     const feelsLikeTemp = weatherStore.feelsLike;
     const cloudsCoded = weatherStore.cloudsCoded;
-    console.log(toJS(geoPositionStore), toJS(weatherStore));
+    console.log(place, place2);
     let img;
     switch (cloudsCoded) {
         case 'CL':
@@ -41,7 +46,7 @@ const WeatherPage: FC = () => {
     return (
         <React.Suspense fallback={<Spinner />}>
             <StyledWeatherPage>
-                {weatherStore.isLoaded && geoPositionStore.isLoaded && (
+                {weatherStore.isLocationLoaded && weatherStore.isWeatherLoaded && (
                     <>
                         <StyledCity>{place}</StyledCity>
                         <Text>{cloudsCoded}</Text>

@@ -10,7 +10,6 @@ export const StyledCity = styled.Text`
     font-size: 40px;
     font-weight: 600;
     text-transform: capitalize;
-    margin-bottom: 12px;
 `;
 
 export const StyledStatusImage = styled.Image`

@@ -1,12 +1,12 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { CitiesResponse, GeoLocationCityResponse } from '../../types/geoPosition.types';
 import { observer } from 'mobx-react-lite';
 import { StyledListItem, StyledAutocompleteContainer } from './CityPage.styled';
 import Autocomplete from 'react-native-autocomplete-input';
 import WeatherPage from '../WeatherPage/WeatherPage';
-import { useAsyncDebounce } from 'react-table';
 import weatherStore from '../../store/weatherStore';
+import { debounce } from 'lodash';
 
 interface GeoPosition {
     latitude: string;
@@ -20,10 +20,13 @@ const CityPage: FC = () => {
     const [hideResults, setHideResults] = useState<boolean>(false);
     const [geoPosition, setGeoPosition] = useState<GeoPosition>();
 
-    const fetchQueries = useAsyncDebounce((query: string) => {
-        hideResults ? setHideResults(false) : void 0;
-        weatherStore.fetchCityQuery(query).then(data => setAllCities(data));
-    }, 200);
+    const fetchQueries = useCallback(
+        debounce((query: string) => {
+            hideResults ? setHideResults(false) : void 0;
+            weatherStore.fetchCityQuery(query).then(data => setAllCities(data));
+        }, 1000),
+        []
+    );
 
     const onChangeText = (query: string) => {
         setValue(query);
@@ -37,9 +40,9 @@ const CityPage: FC = () => {
             longitude: item.GeoPosition.Longitude.toString(),
             keyCode: item.Key,
         });
+        weatherStore.setKeyCode(item.Key);
         setHideResults(true);
     };
-    console.log(geoPosition);
     return (
         <View style={{ position: 'relative' }}>
             <StyledAutocompleteContainer>
@@ -52,6 +55,8 @@ const CityPage: FC = () => {
                     onFocus={() => setHideResults(false)}
                     flatListProps={{
                         keyboardShouldPersistTaps: 'always',
+                        keyExtractor: ({ _, idx }) => idx,
+                        // eslint-disable-next-line react/display-name
                         renderItem: ({ item }) => {
                             return (
                                 <TouchableOpacity key={item.EnglishName} onPress={() => onPressHandler(item)}>

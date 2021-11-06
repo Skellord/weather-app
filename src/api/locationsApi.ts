@@ -2,11 +2,7 @@ import Api from './api';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { apiConfig, API_LOCATIONS, apiLanguage, API_LOCATIONS_TEXT } from './apiConfig';
 import { apiKey } from './apiKey';
-import { CitiesResponse, GeoLocationCityResponse, GeoLocationResponse } from '../types/geoPosition.types';
-
-const locationsApiConfig: AxiosRequestConfig = {
-    baseURL: 'http://dataservice.accuweather.com/',
-};
+import { CitiesResponse, GeoLocationResponse } from '../types/geoPosition.types';
 
 class LocationsApi extends Api {
     public constructor(config: AxiosRequestConfig) {
@@ -15,8 +11,7 @@ class LocationsApi extends Api {
 
     public getLocationRequest(latitude: string, longitude: string) {
         return this.get<GeoLocationResponse>(
-            `${API_LOCATIONS}?apikey=${apiKey}&q=${latitude}%2C%20${longitude}&language=${apiLanguage}`,
-            locationsApiConfig
+            `${API_LOCATIONS}?apikey=${apiKey}&q=${latitude}%2C%20${longitude}&language=${apiLanguage}`
         )
             .then((response: AxiosResponse<GeoLocationResponse>) => {
                 const { data } = response;
@@ -28,10 +23,7 @@ class LocationsApi extends Api {
     }
 
     public fetchCitiesQueries(query: string) {
-        return this.get<CitiesResponse>(
-            `${API_LOCATIONS_TEXT}?apikey=${apiKey}&q=${query}&language=${apiLanguage}`,
-            locationsApiConfig
-        )
+        return this.get<CitiesResponse>(`${API_LOCATIONS_TEXT}?apikey=${apiKey}&q=${query}&language=${apiLanguage}`)
             .then((response: AxiosResponse<CitiesResponse>) => {
                 const { data } = response;
                 return data;

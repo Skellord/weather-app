@@ -8,7 +8,7 @@ export type RootStackParamList = {
 
 export type RootTabParamList = {
     CityTab: undefined;
-    WeatherTab: undefined;
+    ForecastTab: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

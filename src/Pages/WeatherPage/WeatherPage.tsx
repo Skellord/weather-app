@@ -21,18 +21,15 @@ interface WeatherPage {
 }
 
 const WeatherPage: FC<WeatherPage> = ({ latitude, longitude, keyCode }) => {
-    const [place2, setFoo] = useState<string>();
     useEffect(() => {
-        console.log('foo');
         void trackPromise(weatherStore.getCurrentLocation(latitude, longitude));
         void trackPromise(weatherStore.getWeatherCondition(keyCode));
     }, [longitude, latitude, keyCode]);
-    weatherStore.getCurrentLocation(latitude, longitude).then(data => setFoo(data.LocalizedName));
     const currentTemp = weatherStore.currTemp;
     const place = weatherStore.place;
     const feelsLikeTemp = weatherStore.feelsLike;
     const cloudsCoded = weatherStore.cloudsCoded;
-    console.log(place, place2);
+
     let img;
     switch (cloudsCoded) {
         case 'CL':
@@ -49,10 +46,8 @@ const WeatherPage: FC<WeatherPage> = ({ latitude, longitude, keyCode }) => {
                 {weatherStore.isLocationLoaded && weatherStore.isWeatherLoaded && (
                     <>
                         <StyledCity>{place}</StyledCity>
-                        <Text>{cloudsCoded}</Text>
-                        <StyledTempText>
-                            На улице <StyledTemp>{currentTemp}°С</StyledTemp>
-                        </StyledTempText>
+                        <StyledTempText>{cloudsCoded}</StyledTempText>
+                        <StyledTemp>{currentTemp}°С</StyledTemp>
                         <StyledFeelsText>Ощущается как {feelsLikeTemp}°С</StyledFeelsText>
                         <StyledStatusImage source={img} />
                     </>

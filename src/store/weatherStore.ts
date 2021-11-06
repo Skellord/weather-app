@@ -1,4 +1,4 @@
-import { CloudsCoded, ConditionResponse } from '../types/condition.types';
+import { ConditionResponse, ForecastResponse } from '../types/condition.types';
 import conditionsApi from '../api/conditionsApi';
 import { makeAutoObservable } from 'mobx';
 import { isNull } from 'lodash';
@@ -8,12 +8,15 @@ import locationsApi from '../api/locationsApi';
 class weatherStore {
     isLocationLoaded = false;
     isWeatherLoaded = false;
+    isForecastLoaded = false;
     currTemp: number | undefined;
     feelsLike: number | undefined;
     cloudsCoded: string | undefined;
     latitude!: string;
     longitude!: string;
     place!: string;
+    keyCode!: string;
+    forecast!: ForecastResponse;
 
     constructor() {
         makeAutoObservable(this);
@@ -45,6 +48,18 @@ class weatherStore {
         this.isWeatherLoaded = isLoaded;
     }
 
+    setKeyCode(key: string) {
+        this.keyCode = key;
+    }
+
+    setForecast(forecast: any) {
+        this.forecast = forecast;
+    }
+
+    setForecastLoaded(isLoaded: boolean) {
+        this.isForecastLoaded = isLoaded;
+    }
+
     async getCurrentLocation(latitude: string, longitude: string): Promise<GeoLocationResponse> {
         try {
             const response = await locationsApi.getLocationRequest(latitude, longitude);
@@ -67,6 +82,19 @@ class weatherStore {
                 this.setFeelsLike(currDay.RealFeelTemperature.Metric.Value);
                 this.setCloudsCoded(currDay.WeatherText);
                 this.setWeatherLoaded(true);
+            }
+            return response;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async getWeatherForecast(keyCode: string): Promise<ForecastResponse> {
+        try {
+            const response = (await conditionsApi.getForecastRequest(keyCode)) || void 0;
+            if (response) {
+                this.setForecast(response);
+                this.setForecastLoaded(true);
             }
             return response;
         } catch (e) {

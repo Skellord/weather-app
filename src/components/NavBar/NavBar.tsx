@@ -3,7 +3,7 @@ import { StyledNavBar } from './NavBar.styled';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { RootTabParamList } from '../../types/navigation.types';
 import CityPage from '../../Pages/CityPage/CityPage';
-import WeatherPage from '../../Pages/WeatherPage/WeatherPage';
+import ForecastPage from '../../Pages/ForecastPage/ForecastPage';
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
@@ -15,7 +15,18 @@ export const NavBar: FC = () => {
                     name={'CityTab'}
                     component={CityPage}
                     options={{
-                        title: 'Выбор города',
+                        title: 'Сегодня',
+                        tabBarIconStyle: { display: 'none' },
+                        tabBarItemStyle: { justifyContent: 'center', borderRightWidth: 1, borderRightColor: '#efefef' },
+                    }}
+                />
+                <BottomTab.Screen
+                    name={'ForecastTab'}
+                    component={ForecastPage}
+                    options={{
+                        title: '5 дней',
+                        tabBarIconStyle: { display: 'none' },
+                        tabBarItemStyle: { justifyContent: 'center' },
                     }}
                 />
             </BottomTab.Navigator>

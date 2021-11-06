@@ -1,9 +1,5 @@
 export type CloudsCoded = 'CL' | 'FW' | 'SC' | 'BK' | 'OV';
 
-// export enum Clouds {
-//     'Clear' = ''
-// }
-
 export interface Condition {
     WeatherText: string;
     Temperature: Temperature;
@@ -12,15 +8,33 @@ export interface Condition {
 
 export type ConditionResponse = Condition[];
 
+interface TemperatureValues {
+    Value: number;
+    Unit: string;
+    UnitType: number;
+}
+
 export interface Temperature {
-    Metric: {
-        Value: number;
-        Unit: string;
-        UnitType: number;
+    Metric: TemperatureValues;
+    Imperial: TemperatureValues;
+}
+
+export interface Forecast {
+    Date: string;
+    Temperature: {
+        Minimum: TemperatureValues;
+        Maximum: TemperatureValues;
     };
-    Imperial: {
-        Value: number;
-        Unit: string;
-        UnitType: number;
+    Day: {
+        IconPhrase: string;
     };
+}
+
+export interface ForecastResponse {
+    Headline: {
+        EffectiveDate: string;
+        Text: string;
+        Category: string;
+    };
+    DailyForecasts: Forecast[];
 }

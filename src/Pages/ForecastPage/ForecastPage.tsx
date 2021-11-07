@@ -1,13 +1,21 @@
 import React, { FC, useEffect } from 'react';
-import { StyledForecast, StyledList, StyledListItem } from './ForecastPage.styled';
-import { Text } from 'react-native';
+import {
+    StyledForecast,
+    StyledList,
+    StyledListItem,
+    StyledWeatherWrapper,
+    StyledWeatherText,
+} from './ForecastPage.styled';
+import { Text, View } from 'react-native';
 import { trackPromise } from 'react-promise-tracker';
 import weatherStore from '../../store/weatherStore';
 import { observer } from 'mobx-react-lite';
 import { Forecast } from '../../types/condition.types';
 import { parseISO, format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
-export const DATE_MONTH_FORMAT = 'dd.MM eeee';
+const DATE_MONTH_FORMAT = 'dd.MM';
+const DATE_WEEK_FORMAT = 'eeee';
 
 const ForecastPage: FC = () => {
     useEffect(() => {
@@ -17,10 +25,20 @@ const ForecastPage: FC = () => {
     const renderItem = ({ item }) => {
         const forecast = item as Forecast;
         const date = format(parseISO(forecast.Date), DATE_MONTH_FORMAT);
+        const week = format(parseISO(forecast.Date), DATE_WEEK_FORMAT, { locale: ru });
         console.log(date);
         return (
             <StyledListItem>
-                <Text>{date}</Text>
+                <View>
+                    <Text>{week.charAt(0).toUpperCase() + week.slice(1)}</Text>
+                    <Text>{date}</Text>
+                </View>
+                <StyledWeatherWrapper>
+                    <StyledWeatherText>{forecast.Day.IconPhrase}</StyledWeatherText>
+                    <Text>
+                        {Math.floor((forecast.Temperature.Minimum.Value + forecast.Temperature.Maximum.Value) / 2)}°С
+                    </Text>
+                </StyledWeatherWrapper>
             </StyledListItem>
         );
     };

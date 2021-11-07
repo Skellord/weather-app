@@ -55,7 +55,7 @@ const CityPage: FC = () => {
                     onFocus={() => setHideResults(false)}
                     flatListProps={{
                         keyboardShouldPersistTaps: 'always',
-                        keyExtractor: ({ _, idx }) => idx,
+                        keyExtractor: ({ _, idx }) => idx?.toString(),
                         // eslint-disable-next-line react/display-name
                         renderItem: ({ item }) => {
                             return (

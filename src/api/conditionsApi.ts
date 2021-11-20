@@ -1,7 +1,7 @@
 import Api from './api';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { apiConfig, API_CONDITIONS, apiLanguage, API_FORECAST } from './apiConfig';
-import { apiKey, clientId, clientSecret } from './apiKey';
+import { apiKey } from './apiKey';
 import { ConditionResponse, ForecastResponse } from '../types/condition.types';
 
 class ConditionsApi extends Api {

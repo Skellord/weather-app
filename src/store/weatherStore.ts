@@ -17,6 +17,7 @@ class weatherStore {
     place!: string;
     keyCode!: string;
     forecast!: ForecastResponse;
+    iconNumber: number = 11;
 
     constructor() {
         makeAutoObservable(this);
@@ -60,7 +61,12 @@ class weatherStore {
         this.isForecastLoaded = isLoaded;
     }
 
+    setIconNumber(num: number) {
+        this.iconNumber = num;
+    }
+
     async getCurrentLocation(latitude: string, longitude: string): Promise<GeoLocationResponse> {
+        this.setLocationLoaded(false);
         try {
             const response = await locationsApi.getLocationRequest(latitude, longitude);
             if (response) {
@@ -74,6 +80,7 @@ class weatherStore {
     }
 
     async getWeatherCondition(keyCode: string): Promise<ConditionResponse> {
+        this.setWeatherLoaded(false);
         try {
             const response = (await conditionsApi.getConditionRequest(keyCode)) || void 0;
             if (response?.length > 0) {
@@ -82,6 +89,7 @@ class weatherStore {
                 this.setFeelsLike(currDay.RealFeelTemperature.Metric.Value);
                 this.setCloudsCoded(currDay.WeatherText);
                 this.setWeatherLoaded(true);
+                this.setIconNumber(currDay.WeatherIcon);
             }
             return response;
         } catch (e) {
@@ -90,6 +98,7 @@ class weatherStore {
     }
 
     async getWeatherForecast(keyCode: string): Promise<ForecastResponse> {
+        this.setForecastLoaded(false);
         try {
             const response = (await conditionsApi.getForecastRequest(keyCode)) || void 0;
             if (response) {

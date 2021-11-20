@@ -1,11 +1,11 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, Suspense } from 'react';
 import {
     StyledForecast,
     StyledList,
     StyledListItem,
     StyledWeatherWrapper,
     StyledWeatherText,
-} from './ForecastPage.styled';
+} from './forecastPage.styled';
 import { Text, View } from 'react-native';
 import { trackPromise } from 'react-promise-tracker';
 import weatherStore from '../../store/weatherStore';
@@ -13,6 +13,7 @@ import { observer } from 'mobx-react-lite';
 import { Forecast } from '../../types/condition.types';
 import { parseISO, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { Spinner } from '../../components/Spinner';
 
 const DATE_MONTH_FORMAT = 'dd.MM';
 const DATE_WEEK_FORMAT = 'eeee';
@@ -26,7 +27,6 @@ const ForecastPage: FC = () => {
         const forecast = item as Forecast;
         const date = format(parseISO(forecast.Date), DATE_MONTH_FORMAT);
         const week = format(parseISO(forecast.Date), DATE_WEEK_FORMAT, { locale: ru });
-        console.log(date);
         return (
             <StyledListItem>
                 <View>
@@ -51,23 +51,7 @@ const ForecastPage: FC = () => {
                     renderItem={renderItem}
                 />
             ) : (
-                <>
-                    <StyledListItem>
-                        <Text>22.11</Text>
-                    </StyledListItem>
-                    <StyledListItem>
-                        <Text>22.11</Text>
-                    </StyledListItem>
-                    <StyledListItem>
-                        <Text>22.11</Text>
-                    </StyledListItem>
-                    <StyledListItem>
-                        <Text>22.11</Text>
-                    </StyledListItem>
-                    <StyledListItem>
-                        <Text>22.11</Text>
-                    </StyledListItem>
-                </>
+                <Spinner />
             )}
         </StyledForecast>
     );

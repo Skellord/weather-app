@@ -1,7 +1,6 @@
-export type CloudsCoded = 'CL' | 'FW' | 'SC' | 'BK' | 'OV';
-
 export interface Condition {
     WeatherText: string;
+    WeatherIcon: number;
     Temperature: Temperature;
     RealFeelTemperature: Temperature;
 }

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import weatherStore from '../../store/weatherStore';
 import {
     StyledCity,
@@ -7,12 +7,11 @@ import {
     StyledTemp,
     StyledTempText,
     StyledFeelsText,
-} from './WeatherPage.styled';
+} from './weatherPage.styled';
 import { trackPromise } from 'react-promise-tracker';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { Spinner } from '../../components/Spinner';
-import { Text } from 'react-native';
 
 interface WeatherPage {
     latitude: string;
@@ -29,16 +28,7 @@ const WeatherPage: FC<WeatherPage> = ({ latitude, longitude, keyCode }) => {
     const place = weatherStore.place;
     const feelsLikeTemp = weatherStore.feelsLike;
     const cloudsCoded = weatherStore.cloudsCoded;
-
-    let img;
-    switch (cloudsCoded) {
-        case 'CL':
-        case 'FW':
-            img = require('../../../assets/img/good.png');
-            break;
-        default:
-            img = require('../../../assets/img/not-good.png');
-    }
+    console.log(keyCode, weatherStore.keyCode, weatherStore.place);
 
     return (
         <React.Suspense fallback={<Spinner />}>
@@ -49,7 +39,6 @@ const WeatherPage: FC<WeatherPage> = ({ latitude, longitude, keyCode }) => {
                         <StyledTempText>{cloudsCoded}</StyledTempText>
                         <StyledTemp>{currentTemp}°С</StyledTemp>
                         <StyledFeelsText>Ощущается как {feelsLikeTemp}°С</StyledFeelsText>
-                        <StyledStatusImage source={img} />
                     </>
                 )}
             </StyledWeatherPage>

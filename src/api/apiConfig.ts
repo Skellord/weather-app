@@ -7,13 +7,6 @@ export const API_FORECAST = 'forecasts/v1/daily/5day';
 
 export const apiLanguage = 'ru-ru';
 
-const headers = {
-    common: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-    },
-};
-
 export const apiConfig: AxiosRequestConfig = {
     timeout: 60 * 5 * 1000 /* timeout 5 минут */,
     baseURL: 'http://dataservice.accuweather.com/',

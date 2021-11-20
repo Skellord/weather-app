@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import { StyledNavBar } from './NavBar.styled';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { RootTabParamList } from '../../types/navigation.types';
-import CityPage from '../../Pages/CityPage/CityPage';
-import ForecastPage from '../../Pages/ForecastPage/ForecastPage';
+import CityPage from '../../pages/CityPage/CityPage';
+import ForecastPage from '../../pages/ForecastPage/ForecastPage';
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 

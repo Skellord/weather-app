@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { CitiesResponse, GeoLocationCityResponse } from '../../types/geoPosition.types';
 import { observer } from 'mobx-react-lite';
-import { StyledListItem, StyledAutocompleteContainer } from './CityPage.styled';
+import { StyledListItem, StyledAutocompleteContainer } from './cityPage.styled';
 import Autocomplete from 'react-native-autocomplete-input';
 import WeatherPage from '../WeatherPage/WeatherPage';
 import weatherStore from '../../store/weatherStore';
@@ -47,10 +47,10 @@ const CityPage: FC = () => {
         <View style={{ position: 'relative' }}>
             <StyledAutocompleteContainer>
                 <Autocomplete
-                    blurOnSubmit={true}
                     hideResults={hideResults}
                     data={allCities}
                     value={value}
+                    autoFocus={true}
                     onChangeText={onChangeText}
                     onFocus={() => setHideResults(false)}
                     flatListProps={{
@@ -59,7 +59,7 @@ const CityPage: FC = () => {
                         // eslint-disable-next-line react/display-name
                         renderItem: ({ item }) => {
                             return (
-                                <TouchableOpacity key={item.EnglishName} onPress={() => onPressHandler(item)}>
+                                <TouchableOpacity key={item.key} onPress={() => onPressHandler(item)}>
                                     <StyledListItem>
                                         {item.LocalizedName} {item.AdministrativeArea.LocalizedName}{' '}
                                         {item.AdministrativeArea.LocalizedType}

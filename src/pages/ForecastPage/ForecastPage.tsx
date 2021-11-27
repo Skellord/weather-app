@@ -1,4 +1,4 @@
-import React, { FC, useEffect, Suspense } from 'react';
+import React, { FC, useEffect } from 'react';
 import {
     StyledForecast,
     StyledList,
@@ -13,7 +13,7 @@ import { observer } from 'mobx-react-lite';
 import { Forecast } from '../../types/condition.types';
 import { parseISO, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Spinner } from '../../components/Spinner';
+import { Loader } from '../../components/Loader';
 
 const DATE_MONTH_FORMAT = 'dd.MM';
 const DATE_WEEK_FORMAT = 'eeee';
@@ -51,7 +51,7 @@ const ForecastPage: FC = () => {
                     renderItem={renderItem}
                 />
             ) : (
-                <Spinner />
+                <Loader />
             )}
         </StyledForecast>
     );

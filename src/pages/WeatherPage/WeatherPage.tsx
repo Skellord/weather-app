@@ -3,15 +3,13 @@ import weatherStore from '../../store/weatherStore';
 import {
     StyledCity,
     StyledWeatherPage,
-    StyledStatusImage,
     StyledTemp,
     StyledTempText,
     StyledFeelsText,
 } from './weatherPage.styled';
 import { trackPromise } from 'react-promise-tracker';
-import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { Spinner } from '../../components/Spinner';
+import { Loader } from '../../components/Loader';
 
 interface WeatherPage {
     latitude: string;
@@ -28,10 +26,9 @@ const WeatherPage: FC<WeatherPage> = ({ latitude, longitude, keyCode }) => {
     const place = weatherStore.place;
     const feelsLikeTemp = weatherStore.feelsLike;
     const cloudsCoded = weatherStore.cloudsCoded;
-    console.log(keyCode, weatherStore.keyCode, weatherStore.place);
 
     return (
-        <React.Suspense fallback={<Spinner />}>
+        <React.Suspense fallback={<Loader />}>
             <StyledWeatherPage>
                 {weatherStore.isLocationLoaded && weatherStore.isWeatherLoaded && (
                     <>
